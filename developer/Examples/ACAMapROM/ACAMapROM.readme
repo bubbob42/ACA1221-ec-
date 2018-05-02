@@ -1,0 +1,38 @@
+
+ACAMapROM README  18/Aug/2016
+
+Introduction:
+
+ACAMapROM is a little tool to map the internal Kickstart ROM of your machine or
+any other compatible kickstart image to the 32bit RAM of your ACA1233n.
+
+
+Requirements:
+
+    - an ACA1233n (obviously)
+    - ACA1233n.library in libs: (supplied with this archive)
+
+Quickstart:
+
+Copy ACA1233n.library to libs:, ACAMapROM to c: or elsewhere in your path.
+
+
+Description:
+    
+ACAMapROM supports 256KB, 512KB and 1MB Kickstart ROM images. It must be run 
+from shell, as first command of your startup-sequence. By default (when 
+being called without any options) it will map the contents of your physical 
+Kickstart ROM to 32bit RAM, speeding up the execution of system routines
+(most notably file accesses) significantly. Furthermore, it supports the 
+following command line options:
+
+    Q=QUIET/S:            suppresses output. Useful for e.g. startup-sequence
+    
+    FILE:				  path to Kickstart ROM image; default is the internal
+                          ROM.
+
+Developers:
+
+ACAMapROM depends on ACA1233n.library. The source code is supplied with this 
+archive. It compiles with SAS/C, other compilers may need modifications.
+

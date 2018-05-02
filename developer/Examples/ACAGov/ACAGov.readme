@@ -1,0 +1,87 @@
+
+ACAGov README  29/Aug/2015
+
+Introduction:
+
+ACAGov enables you to set your CPU clock of your ACA1221 turbocard depending
+on the your system's current load. If you're e.g. decompressing a JPEG or 
+decrunching an archive, you card's clock will rise to the maximum and 
+- after the job is done - sink back to the minimum clock speed specified.
+That's basically what all modern AMD or Intel CPUs do and it's now available
+for the first time on classic Amiga systems.
+
+A fully licensed ACA1221 provides three "speed steppings" ranging 
+from 0 (9.46 MHz) to 3 (28.38 MHz). To control the behaviour of ACAGov, some 
+command line arguments have been provided. But let's start with a little 
+example:
+	
+	ACAGov I=500 MAX=3 MIN=1 UT=60 LT=30 A
+
+This command will check your CPU's load every 500 milliseconds, raise the
+clock speed up to speed stepping 3 (28.38MHz) if the load exceeds 60% or 
+lower the clock speed down to speed stepping 1 (17.03 MHz) if the load 
+is less than 30%. All actions will be printed to the shell, so you can 
+play around with your setup and fine tune the settings to your needs.
+
+Please keep in mind, that:
+
+	- the output to shell is generating CPU load, especially on screens
+	  with many colors or when setting low INTERVAL values. You can 
+	  supress it with the argument Q (QUIET), which you should always
+	  use in scripts, e.g. the startup-sequence.
+	- ACAGov will only change speed stepping, if argument A (AUTOCLOCK)
+	  is provided.
+	- even if your system seems idle, CPU load will seldom fall below 
+	  20%. Keep this in mind when setting LT (LOWERTHRESHOLD).
+	- if you want to start ACAGov at boot time, put it into your
+	  startup-sequence after ACATune and spawn it with:
+	  
+	  "run > nil: c:ACAGov QUIET [add your arguments here]" 
+	
+	- to stop ACAGov, simply launch it again. If you started it from shell 
+	  without "run", simply activate the according shell window and press 
+	  CTRL-C. (yes, you can also stop it via the "break" command") 
+	  
+
+The following speed steppings are available with a fully licensed ACA1221:
+
+	speed stepping 0:	9.46 MHz
+	speed stepping 1:	17.03 MHz
+	speed stepping 2:	21.28 MHz
+	speed stepping 3:	28.38 MHz
+	  
+Overview of arguments:
+
+	Q=QUIET/S		- suppresses output
+				  default: disabled
+							  
+	A=AUTOCLOCK/S		- enables automatic clock control by ACAGov
+				  default: disabled
+							  
+	UT=UPPERTHRESHOLD/K/N	- if your CPU load (in %) passes over this 
+				  threshold, ACAGov will raise the clock 
+				  speed stepping by one step
+				  default: 70 (%)
+							  
+	LT=LOWERTHRESHOLD/K/N	- if your CPU load (in %) falls below this 
+				  threshold, ACAGov will lower the clock 
+				  speed stepping by one step
+				  default: 50 (%)
+							  
+	I=INTERVAL/K/N		- the measurement interval in 1/1000 second
+				  default: 200 (= 1/5 second)
+							  
+	MAX=MAXSTEP/K/N		- if AUTOCLOCK is enabled, ACAGov may increase
+				  the clock speed stepping up to this value
+				  default: 3 (28.38 MHz)
+							  
+	MIN=MINSTEP/K/N		- if AUTOCLOCK is enabled, ACAGov may decrease
+				  the clock speed stepping down to this value
+				  default: 0 (9.46 MHz)
+
+
+Developers:
+
+ACAGov depends on ACA1221.library. The source code is supplied with this 
+archive. It compiles with SAS/C, other compilers may need modifications.
+

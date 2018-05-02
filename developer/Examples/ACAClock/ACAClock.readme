@@ -1,0 +1,49 @@
+
+ACAClock README  29/Aug/2015
+
+Introduction:
+
+ACAClock is a little tool to change the CPU clock of your ACA1221 turbocard.
+
+
+Requirements:
+
+	- an ACA1221 (obviously)
+	- ACA1221.library in libs: (supplied with this archive)
+
+Quickstart:
+
+Copy ACA1221.library to libs:, ACAClock to c: and add "C:ACAClock s=3" to
+your startup-sequence (immediatley after ACATune). This will clock your 
+card to 28.38 Mhz, if you own the according license. If you don't, read on. 
+
+
+Description:
+	
+A fully licensed ACA1221 provides three "speed steppings" ranging from 
+0 (9.46 MHz) to 3 (28.38 MHz). ACAClock has the following command line
+options:
+
+	Q=QUIET/S:			suppress output. Useful for startup-sequence
+	M=MAXSPEED/S:		displays the fastest speed stepping available for
+						your card
+	C=CURRENTSPEED/S:	displays the current speed stepping
+	S=SETSPEED/K/N:		sets a speed stepping (0-3)
+	
+The following speed steppings are available with a fully licensed ACA1221:
+
+	speed stepping 0:	9.46 MHz
+	speed stepping 1:	17.03 MHz
+	speed stepping 2:	21.28 MHz
+	speed stepping 3:	28.38 MHz
+
+The card's clock will remain at the selected speed stepping until the next 
+reboot or flip of the power switch. The default speed stepping is 
+1 (17.03 Mhz) for the ACA1221 (non-EC version).
+
+
+Developers:
+
+ACAGov depends on ACA1221.library. The source code is supplied with this 
+archive. It compiles with SAS/C, other compilers may need modifications.
+

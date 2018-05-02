@@ -1,0 +1,5 @@
+FROM LIB:c.o "ACAGov.o"+"GetUsage.o"
+TO "ACAGov"
+LIB LIB:sc.lib LIB:amiga.lib
+VERBOSE
+

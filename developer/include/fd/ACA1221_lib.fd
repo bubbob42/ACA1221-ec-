@@ -1,0 +1,9 @@
+##base _ACA1221Base
+##bias 30
+##public
+ACA1221_GetCurrentSpeed()()
+ACA1221_GetMaxSpeed()()
+ACA1221_SetSpeed(SpeedStep)(d0)
+ACA1221_MapROM(file,option)(d0,d1)
+ACA1221_GetStatus()()
+##end

@@ -1,0 +1,6 @@
+FROM LIB:c.o "ACAClock.o"
+TO "ACAClock"
+LIB LIB:sc.lib LIB:amiga.lib
+ADDSYM
+VERBOSE
+

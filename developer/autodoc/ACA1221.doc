@@ -1,0 +1,243 @@
+TABLE OF CONTENTS
+
+ACA1221.library/ACA1221_GetCurrentSpeed
+ACA1221.library/ACA1221_GetMaxSpeed
+ACA1221.library/ACA1221_GetStatus
+ACA1221.library/ACA1221_MapROM
+ACA1221.library/ACA1221_SetSpeed
+ACA1221.library/ACA1221_GetCurrentSpeed  ACA1221.library/ACA1221_GetCurrentSpeed
+
+    NAME
+        ACA1221_GetCurrentSpeed -- determine the current speed values of the card
+
+   SYNOPSIS
+        speedinfo = ACA1221_GetCurrentSpeed()
+        D0
+
+        struct ClockInfo *ACA1221_GetCurrentSpeed(void);
+
+   FUNCTION
+        Read current speed setting of the card. Returns a pointer to
+        an internal library structure. Both actual clock value
+        (STRPTR) and speed stepping (UWORD) will be returned.													*
+
+   INPUTS
+        none
+
+   RESULT
+        speedinfo - pointer to struct ClockInfo (see ACA1221.h) or NULL
+
+   EXAMPLE
+        struct ClockInfo *ACASpeed = NULL:
+
+        ACASpeed = ACA1221_GetCurrentSpeed();
+
+        Printf("My current speed stepping is %ld (%s)",
+                  ACASpeed->ci_CPUSpeedStep, ACASpeed->ci_CPUClock);
+
+   NOTES
+        Any task accessing the library may call ACA1221_SetSpeed(), so always
+        call ACA1221_GetCurrentSpeed() right before you process the ClockInfo
+        values.
+
+   BUGS
+        None known
+
+   SEE ALSO
+        ACA1221_GetMaxSpeed(), ACA1221_SetSpeed(), libraries/ACA1221.h
+
+
+ACA1221.library/ACA1221_GetMaxSpeed          ACA1221.library/ACA1221_GetMaxSpeed
+
+   NAME
+        ACA1221_GetMaxSpeed() - determine the maximum speed setting of the card
+
+   SYNOPSIS
+        speedinfo =	ACA1221_GetMaxSpeed();
+        D0
+
+        struct ClockInfo *ACA1221_GetMaxSpeed(void);
+
+   FUNCTION
+        Read maximum speed setting of the card. Returns a pointer to
+        an internal library structure. Both actual clock value
+        (STRPTR) and speed stepping (UWORD) will be returned.
+
+   INPUTS
+        none
+
+   RESULT
+        speedinfo - pointer to struct ClockInfo (see ACA1221.h) or NULL
+
+   EXAMPLE
+        struct ClockInfo *ACAMaxSpeed = NULL:
+
+        ACAMaxSpeed = ACA1221_GetMaxSpeed();
+
+        Printf("My maximum speed stepping is %ld (%s)",
+                  ACAMaxSpeed->ci_CPUSpeedStep, ACAMaxSpeed->ci_CPUClock);
+
+   NOTES
+        The maximum speed is determined by the current license status of the
+        card. The status can be checked via the tool "ACAControl" supplied
+        with the card.
+
+   BUGS
+        None known
+
+   SEE ALSO
+        ACA1221_GetCurrentSpeed(), ACA1221_SetSpeed(), libraries/ACA1221.h
+
+
+ACA1221.library/ACA1221_GetStatus              ACA1221.library/ACA1221_GetStatus
+
+   NAME
+        ACA1221_GetStatus() - return info about the card's settings
+
+   SYNOPSIS
+        status = ACA1221_GetStatus();
+        D0
+
+        struct ACA1221Info *ACA1221_GetStatus(void);
+
+   FUNCTION
+        Reads settings of the card and returns a pointer to an internal
+        library structure.
+
+   INPUTS
+        none
+
+   RESULT
+        status - pointer to struct ACA1221Info (see ACA1221.h) or NULL
+
+   EXAMPLE
+        struct ACA1221Info *ACAInfo = NULL:
+
+        ACAInfo = ACA1221_GetStatus();
+
+        Printf("MapROM is currently %s\n",
+                  ACAInfo->ai_MapROMStatus ? "enabled" : "not enabled");
+
+   NOTES
+        None
+
+   BUGS
+        None known
+
+   SEE ALSO
+        libraries/ACA1221.h
+
+
+ACA1221.library/ACA1221_MapROM                    ACA1221.library/ACA1221_MapROM
+
+   NAME
+        ACA1221_MapROM() - Maps/unmaps Kickstart ROM to/from FastRAM
+
+   SYNOPSIS
+        success = ACA1221_MapROM(file, option);
+        D0                       D0    D1
+
+        BOOL ACA1221_MapROM(STRPTR, LONG);
+
+   FUNCTION
+        Maps Kickstart ROM to the contents of a file which will be copied to
+        FastRAM beforehand.Supply AR_MAPINT as option argument to use the
+        internal physical Kickstart ROM as the source or supply AR_MAPREMOVE to
+        deactivate the MapROM feature. If you supply an option, "file" should
+        be NULL, but will be ignored anyway.
+
+   INPUTS
+        file   - pointer to a filenameor NULL
+        option - one of the options AR_MAPREMOVE, AR_MAPINT
+
+   RESULT
+        success - TRUE, if the card accepts the setting, otherwise FALSE.
+
+   EXAMPLE
+        BOOL success = FALSE;
+        STRPTR file = "kickstart.rom";
+        ...
+
+        success = MapROM(file, 0);
+
+        if (success) {
+            Printf("Contents of the file have been mapped as Kickstart ROM\n");
+        }
+
+   NOTES
+
+   BUGS
+		none known
+
+   SEE ALSO
+        libraries/ACA1221.h
+
+
+ACA1221.library/ACA1221_SetSpeed                ACA1221.library/ACA1221_SetSpeed
+
+   NAME
+        ACA1221_SetSpeed - changes the current speed setting of the card
+
+   SYNOPSIS
+        Success = ACA1221_SetSpeed(speedStepping);
+        D0                 D0
+
+        BOOL ACA1221_SetSpeed(UBYTE);
+
+   FUNCTION
+        Change the current speed setting of the card to the supplied stepping.
+        The setting is in effect until the next flip of the power switch.
+
+   INPUTS
+        speedStepping   - binary value, a fully licensed ACA1221 supports
+                          stepping 0-3, which correspond to the following
+                          clock values:
+
+                          0: 9.46 MHz
+                          1: 17.03 MHz
+                          2: 21.28 MHz
+                          3: 28.38 MHz (42.56 MHz in overdrive mode)
+
+                          the  ACA1221EC always supports stepping 0-3,
+                          which correspond to the following clock values:
+
+                          0: 17.03 MHz
+                          1: 21.28 MHz
+                          2: 28.38 MHz
+                          3: 42.56 MHz (will only work with CPU mask E13G!)
+
+
+   RESULT
+        success - TRUE, if the card accepts the setting, otherwise FALSE. You
+                  may check this by calling ACA1221_GetCurrentSpeed() after
+                  ACA1221_SetSpeed().
+
+   EXAMPLE
+        BOOL success = FALSE;
+        UBYTE mySpeed = 2;
+
+        success = ACA1221_SetSpeed(mySpeed);
+
+        if (success) {
+            Printf("My speed stepping has been set to %ld\n", mySpeed);
+        }
+
+   NOTES
+        For the ACA1221, the maximum speed available is determined by the
+        current license status of the card, while all speed steps are always
+        available for the 1221EC.
+        You get the maximum speed stepping by calling ACA1221_GetMaxSpeed().
+        The license status of the ACA1221 can be checked via the tool
+        "ACAControl" supplied with the card.
+
+        You may call the function anytime without the need to disable
+        multitasking. Other tasks (e.g. formatting disks, etc.) will not be
+        disturbed.
+
+   BUGS
+        None known
+
+   SEE ALSO
+        ACA1221_GetCurrentSpeed(), ACA1221_GetMaxSpeed(), libraries/ACA1221.h
+
+

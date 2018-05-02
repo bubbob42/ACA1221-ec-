@@ -1,0 +1,7 @@
+FROM LIB:c.o "ACAMapROM.o"
+TO "ACAMapROM"
+LIB LIB:sc.lib LIB:amiga.lib
+STRIPDEBUG
+VERBOSE
+DEFINE @__chkabort=@__dummy
+
